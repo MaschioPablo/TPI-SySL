@@ -13,42 +13,34 @@ const productos = {
   }
   
   function realizarAccion() {
+    //agregar si ya existe en un almacen no hacer un new
     const codigo = document.getElementById('codigo').value;
+    if (codigo.match(/^new\.\d{4}[A-D]$/))
+
     if (codigo.match(/^new\.\d{4}[A-D]$/)) {
       const almacenProducto = codigo.charAt(codigo.length - 1);
       productos[almacenProducto].push(codigo);
       mostrarProductos();
-    } else if (codigo.match(/^mov\.\d{4}[A-D]$/)) {
-        const nuevoAlmacen = codigo.charAt(codigo.length - 1);
-        const producto = "new." + codigo.substring(4);
-        const indice = productos[almacenActual].indexOf(producto);
-        if (indice !== -1) {
-          // Eliminar el producto del almacén actual
-          productos[almacenActual].splice(indice, 1);
-          // Agregar el producto al nuevo almacén
-          productos[nuevoAlmacen].push(producto);
-          mostrarProductos();
-        } else {
+    } 
+    else if (codigo.match(/^del\.\d{4}[A-D]$/)) {
+      const codigo = document.getElementById('codigo').value;
+      const almacenActual = codigo.charAt(codigo.length - 1);
+      productos[almacenActual].pop(codigo);
+      mostrarProductos();
+    }
+    //agregar mov
+    //el mov elimina el producto del almacen donde se encuentra
+    //y lo coloca en el almacen del code
+    //ej mov.0000B
+    //elimina de 0000N y coloca en 0000B
+    else {
           alert('Producto no encontrado en este almacén.');
         }
-      } else {
-        alert('Formato de código incorrecto. Debe ser "new.0000A" o "mov.0000B".');
+      else {
+        alert('Formato de código incorrecto. Debe ser "new.0000A" o "mov.0000B" o "del.0000C"');
       }
-      
-      
-  }
-  
-  function eliminarProducto() {
-    const codigo = document.getElementById('codigo').value;
-    const indice = productos[almacenProducto].indexOf(codigo);
-    if (indice !== -1) {
-      productos[almacenProducto].splice(indice, 1);
-      mostrarProductos();
-    } else {
-      alert('Producto no encontrado en este almacén.');
     }
-  }
-  
+
   // Mostrar productos al cargar la página
   mostrarProductos();
   
