@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Starfish - Sistema de Gestión de Almacén</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div id="container">
+    <div id="formulario">
+      <label for="codigo">Código del producto:</label>
+      <input type="text" id="codigo" placeholder="Ejemplo: new.0000A / mov.0000B">
+      <button onclick="realizarAccion()">Realizar Acción</button>
+      <button onclick="eliminarProducto()">Eliminar Producto</button>
+    </div>
+
+    <div id="almacenes">
+      <div class="almacen">
+        <h2>Almacén A</h2>
+        <div id="productosA"></div>
+      </div>
+      <div class="almacen">
+        <h2>Almacén B</h2>
+        <div id="productosB"></div>
+      </div>
+      <div class="almacen">
+        <h2>Almacén C</h2>
+        <div id="productosC"></div>
+      </div>
+      <div class="almacen">
+        <h2>Almacén D</h2>
+        <div id="productosD"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
