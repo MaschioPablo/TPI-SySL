@@ -1,46 +1,120 @@
 const productos = {
-    A: [],
-    B: [],
-    C: [],
-    D: [],
-  };
-  
-  function mostrarProductos() {
-    document.getElementById('productosA').innerHTML = productos['A'].map(producto => `<div>${producto}</div>`).join('');
-    document.getElementById('productosB').innerHTML = productos['B'].map(producto => `<div>${producto}</div>`).join('');
-    document.getElementById('productosC').innerHTML = productos['C'].map(producto => `<div>${producto}</div>`).join('');
-    document.getElementById('productosD').innerHTML = productos['D'].map(producto => `<div>${producto}</div>`).join('');
-  }
-  
-  function realizarAccion() {
-    //agregar si ya existe en un almacen no hacer un new
-    const codigo = document.getElementById('codigo').value;
-    if (codigo.match(/^new\.\d{4}[A-D]$/))
+  A: [],
+  B: [],
+  C: [],
+  D: [],
+};
 
+function mostrarProductos() {
+  document.getElementById("productosA").innerHTML = productos["A"]
+    .map((producto) => `<div>${producto}</div>`)
+    .join("");
+  document.getElementById("productosB").innerHTML = productos["B"]
+    .map((producto) => `<div>${producto}</div>`)
+    .join("");
+  document.getElementById("productosC").innerHTML = productos["C"]
+    .map((producto) => `<div>${producto}</div>`)
+    .join("");
+  document.getElementById("productosD").innerHTML = productos["D"]
+    .map((producto) => `<div>${producto}</div>`)
+    .join("");
+}
+
+document.getElementById(`botonAccion`).addEventListener("click", () => {
+  let codigo = document.getElementById("codigo").value;
+  if (codigo.match(/^(new|del|mov)\.\d{4}[A-D]$/)) {
+    const almacenProducto = codigo.charAt(codigo.length - 1);
     if (codigo.match(/^new\.\d{4}[A-D]$/)) {
-      const almacenProducto = codigo.charAt(codigo.length - 1);
-      productos[almacenProducto].push(codigo);
-      mostrarProductos();
-    } 
-    else if (codigo.match(/^del\.\d{4}[A-D]$/)) {
-      const codigo = document.getElementById('codigo').value;
-      const almacenActual = codigo.charAt(codigo.length - 1);
-      productos[almacenActual].pop(codigo);
-      mostrarProductos();
-    }
-    //agregar mov
-    //el mov elimina el producto del almacen donde se encuentra
-    //y lo coloca en el almacen del code
-    //ej mov.0000B
-    //elimina de 0000N y coloca en 0000B
-    else {
-          alert('Producto no encontrado en este almacén.');
+      const numeros = codigo.match(/\d+/g);
+      if (
+        productos["A"].includes(numeros[0]) ||
+        productos["B"].includes(numeros[0]) ||
+        productos["C"].includes(numeros[0]) ||
+        productos["D"].includes(numeros[0])
+      ) {
+        mensajeGenerico(
+          "Código repetido",
+          "El producto ya se encuentra en un depósito",
+          "error"
+        );
+        let snd = new Audio("./snd/no agregado.mp3");
+        snd.play();
+      } else {
+        const numeros = codigo.match(/\d+/);
+        if (numeros && numeros.length > 0) {
+          productos[almacenProducto].push(numeros[0].toString());
+          mensajeProductoAgregado(almacenProducto);
         }
-      else {
-        alert('Formato de código incorrecto. Debe ser "new.0000A" o "mov.0000B" o "del.0000C"');
+        mostrarProductos();
       }
-    }
+    } else if (codigo.match(/^del\.\d{4}[A-D]$/)) {
+      if (productos.almacenProducto.includes(codigo)) {
+        productos.almacenProducto = productos.almacenProducto.filter(
+          (producto) => producto !== codigo
+        );
+        mostrarProductos();
+      } else {
+        mensajeGenerico(
+          "Código erroneo",
+          "El producto no se encuentra en el depósito",
+          "info"
+        );
+      }
+    } else if (codigo.match(/^mov\.\d{4}[A-D]$/)) {
+      alert("mov");
+      if (productos["A"].includes(numeros[0])) {
 
-  // Mostrar productos al cargar la página
-  mostrarProductos();
-  
+      } else if (productos["B"].includes(numeros[0])) {
+          
+      } else if(productos["C"].includes(numeros[0])){
+          
+      } else {
+
+      }
+    }else if (codigo == "") {
+    mensajeProductoVacio();
+  } else {
+    mensajeProductoErroneo();
+  }
+}});
+
+//----------------------Funciones para mensajes----------------------//
+
+function mensajeGenerico(mensaje, mensajeDeposito, tipo) {
+  Swal.fire(mensaje, mensajeDeposito, tipo);
+}
+
+function mensajeProductoErroneo() {
+  Swal.fire("Código Erroneo", "", "info");
+  let snd = new Audio("./snd/no agregado.mp3");
+  snd.play();
+}
+
+function mensajeProductoAgregado(deposito) {
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 1500,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
+
+  Toast.fire({
+    icon: "success",
+    title: "Producto agregado al deposito  " + deposito,
+  });
+  let snd = new Audio("./snd/agregar producto.mp3");
+  snd.play();
+}
+
+function mensajeProductoVacio() {
+  Swal.fire("Campo vacío", "", "info");
+  let snd = new Audio("./snd/no agregado.mp3");
+  snd.play();
+}
+
+mostrarProductos();
