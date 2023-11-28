@@ -21,6 +21,18 @@ function mostrarProductos() {
 }
 
 document.getElementById("botonAccion").addEventListener("click", () => {
+  realizarAccion();
+});
+
+document.getElementById("codigo").addEventListener("keyup", (event) => {
+  if (event.key === "Enter") {
+    realizarAccion();
+  }
+});
+
+
+
+function realizarAccion(){
   let codigo = document.getElementById("codigo").value;
   if (codigo.match(/^(new|del|mov)\.\d{4}[A-D]$/)) {
     const almacenProducto = codigo.charAt(codigo.length - 1);
@@ -103,7 +115,7 @@ document.getElementById("botonAccion").addEventListener("click", () => {
   } else {
     mensajeProductoErroneo();
   }
-});
+};
 
 //----------------------Funciones para mensajes----------------------//
 
